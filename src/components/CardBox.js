@@ -3,7 +3,6 @@ import Cards from "./Cards";
 import { useContext } from "react";
 import { CartContext } from "../context/Context";
 import Box from "@mui/material/Box";
-// console.log(CartContext);
 
 function CardBox() {
   const { cartItems } = useContext(CartContext);
@@ -14,18 +13,16 @@ function CardBox() {
     <>
       <Box
         sx={{
-          display: "flex",
-          justifyContent: "space-around",
-          alignContent: "center",
-          p: 1,
-          my: 4,
-
-          bgcolor: "background.paper",
-          borderRadius: 4,
-          flexWrap: "wrap",
-          flexDirection: "row",
-          gap: 2,
+          display: "grid",
+          //   gap: 4,
+          gridTemplateColumns: "repeat(auto-fit, 290px)",
+          justifyContent: "center",
+          //   m: 1,
         }}
+        // item
+        // xs={12}
+        // sm={6}
+        // md={4}
       >
         {/* <b>{loading ? "loading" : null}</b>
         <b>{error ? error : null}</b> */}

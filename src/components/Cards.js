@@ -18,6 +18,7 @@ function Cards(data) {
     <Box>
       <b>{loading ? "loading" : null}</b>
       <b>{error ? error : null}</b>
+
       <Card
         sx={{
           width: 250,

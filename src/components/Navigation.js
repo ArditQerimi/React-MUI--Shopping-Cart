@@ -18,6 +18,9 @@ import SearchIcon from "@mui/icons-material/Search";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 
+import { useContext } from "react";
+import { CartContext } from "../context/Context";
+
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
@@ -59,6 +62,10 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function Navigation() {
+  const { cartItems, showHideCart, showCart } = useContext(CartContext);
+
+  // console.log(showHideCart);
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
@@ -120,7 +127,7 @@ export default function Navigation() {
       <MenuItem>
         <IconButton size="large" aria-label="show 4 new mails" color="inherit">
           <Badge badgeContent={4} color="error">
-            <ShoppingCartIcon />
+            <ShoppingCartIcon onClick={showHideCart} />
           </Badge>
         </IconButton>
         <p>Products</p>
@@ -129,63 +136,65 @@ export default function Navigation() {
   );
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
-        <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ display: { xs: "none", sm: "block" } }}
-          >
-            ShoppingCart
-          </Typography>
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ "aria-label": "search" }}
-            />
-          </Search>
-          <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ display: { xs: "none", md: "flex" } }}>
+    <>
+      <Box sx={{ flexGrow: 1 }}>
+        <AppBar position="static">
+          <Toolbar>
             <IconButton
               size="large"
-              aria-label="show 4 products in cart"
+              edge="start"
               color="inherit"
+              aria-label="open drawer"
+              sx={{ mr: 2 }}
             >
-              <Badge badgeContent={4} color="error">
-                <ShoppingCartIcon />
-              </Badge>
+              <MenuIcon />
             </IconButton>
-          </Box>
-          <Box sx={{ display: { xs: "flex", md: "none" } }}>
-            <IconButton
-              size="large"
-              aria-label="show more"
-              aria-controls={mobileMenuId}
-              aria-haspopup="true"
-              onClick={handleMobileMenuOpen}
-              color="inherit"
+            <Typography
+              variant="h6"
+              noWrap
+              component="div"
+              sx={{ display: { xs: "none", sm: "block" } }}
             >
-              <MoreIcon />
-            </IconButton>
-          </Box>
-        </Toolbar>
-      </AppBar>
-      {renderMobileMenu}
-      {renderMenu}
-    </Box>
+              ShoppingCart
+            </Typography>
+            <Search>
+              <SearchIconWrapper>
+                <SearchIcon />
+              </SearchIconWrapper>
+              <StyledInputBase
+                placeholder="Search…"
+                inputProps={{ "aria-label": "search" }}
+              />
+            </Search>
+            <Box sx={{ flexGrow: 1 }} />
+            <Box sx={{ display: { xs: "none", md: "flex" } }}>
+              <IconButton
+                size="large"
+                aria-label="show 4 products in cart"
+                color="inherit"
+              >
+                <Badge badgeContent={4} color="error">
+                  <ShoppingCartIcon onClick={showHideCart} />
+                </Badge>
+              </IconButton>
+            </Box>
+            <Box sx={{ display: { xs: "flex", md: "none" } }}>
+              <IconButton
+                size="large"
+                aria-label="show more"
+                aria-controls={mobileMenuId}
+                aria-haspopup="true"
+                onClick={handleMobileMenuOpen}
+                color="inherit"
+              >
+                <MoreIcon />
+              </IconButton>
+            </Box>
+          </Toolbar>
+        </AppBar>
+        {renderMobileMenu}
+        {renderMenu}
+      </Box>
+    </>
   );
 }

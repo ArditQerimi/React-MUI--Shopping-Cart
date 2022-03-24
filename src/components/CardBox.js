@@ -28,7 +28,7 @@ function CardBox() {
         <b>{error ? error : null}</b> */}
 
         {resData.length > 0
-          ? resData.map((data) => <Cards key={data.id} data={data} />)
+          ? resData.map((data) => <Cards key={data.id} data={data} {...data} />)
           : ""}
         {/* <Cards /> */}
       </Box>

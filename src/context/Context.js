@@ -6,7 +6,7 @@ const initialState = {
   loading: true,
   error: "",
   post: {},
-  cartItems: [],
+  //   cartItems: [],
 };
 
 const CartReducer = (state, action) => {
@@ -23,12 +23,26 @@ const CartReducer = (state, action) => {
         error: "Something went wrong!",
         post: {},
       };
+    // case "ADD_TO_CART": {
+    //   return {
+    //     ...state,
+    //     cartItems: [...state.cartItems, action.payload],
+    //   };
+    // }
+    default:
+      return state;
+  }
+};
+
+export const cartReducer = (state, action) => {
+  switch (action.type) {
     case "ADD_TO_CART": {
       return {
         ...state,
-        cartItems: [...state.cartItems, action.payload],
+        cartItems: [...state.cartItems, { ...action.payload, qty: 1 }],
       };
     }
+
     default:
       return state;
   }
@@ -37,21 +51,28 @@ const CartReducer = (state, action) => {
 export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
-  //   console.log(children);
   const [state, dispatch] = useReducer(CartReducer, initialState);
-  //   console.log(state.post);
+
+  const [cartState, cartDispatch] = useReducer(cartReducer, {
+    // products: products,
+    cartItems: [],
+  });
+
   useEffect(() => {
     axios
       .get("https://fakestoreapi.com/products/")
       .then((res) => {
         dispatch({ type: "FETCH_SUCCESS", payload: res.data });
-        // console.log(res.data);
       })
       .catch((error) => {
         dispatch({ type: "FETCH_ERROR" });
       });
-    // res.json());
   }, []);
+
+  const addToCart = function(item) {
+    console.log(item);
+    cartDispatch({ type: "ADD_TO_CART", payload: item });
+  };
 
   return (
     <CartContext.Provider
@@ -59,7 +80,8 @@ export const CartProvider = ({ children }) => {
         resData: state.post,
         loading: state.loading,
         error: state.error,
-        cartItems: state.cartItems,
+        cartItems: cartState.cartItems,
+        addToCart,
       }}
     >
       {children}

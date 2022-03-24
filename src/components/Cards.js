@@ -10,38 +10,9 @@ import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import { useContext } from "react";
 import { CartContext } from "../context/Context";
 
-const styles = (theme) => ({
-  root: {
-    display: "grid",
-    gridTemplateColumns: "repeat(4, 1fr)",
-    gridGap: "24px",
-  },
-
-  card: {
-    display: "grid",
-    gridTemplateRows: "1fr auto",
-    gridGap: "8px",
-    minHeight: 280,
-    backgroundImage: `url(https://via.placeholder.com/100x200)`,
-    backgroundSize: "cover",
-  },
-
-  body: {
-    alignSelf: "end",
-    textAlign: "center",
-  },
-
-  actions: {
-    display: "flex",
-
-    justifyContent: "space-between",
-  },
-});
-
 function Cards(data) {
-  console.log(data);
-  const { resData, loading, error } = useContext(CartContext);
-  //   console.log(loading);
+  //   console.log(data);
+  const { loading, error, addToCart } = useContext(CartContext);
 
   return (
     <Box>
@@ -92,6 +63,7 @@ function Cards(data) {
             sx={{ mt: "auto" }}
             variant="contained"
             startIcon={<AddShoppingCartIcon />}
+            onClick={() => addToCart(data)}
           >
             Add To Cart
           </Button>

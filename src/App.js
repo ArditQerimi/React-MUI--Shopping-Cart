@@ -1,11 +1,11 @@
 import React from "react";
 import Navigation from "./components/Navigation";
-
 import PropTypes from "prop-types";
 import Box from "@mui/material/Box";
 import { CartProvider } from "./context/Context";
-
 import CardBox from "./components/CardBox";
+
+import ShoppingCart from "./components/ShoppingCart";
 
 function Item(props) {
   const { sx, ...other } = props;
@@ -41,13 +41,23 @@ Item.propTypes = {
   ]),
 };
 
+// const StyledFab = styled(Fab)({
+//   // position: "absolute",
+//   // zIndex: 1,
+//   // top: -30,
+//   // left: 0,
+//   // right: 0,
+//   // margin: "0 auto",
+// });
+
 function App() {
   return (
     <CartProvider>
       <Navigation />
-      <div>
-        <CardBox />
-      </div>
+      {/* <div> */}
+      <ShoppingCart />
+      <CardBox />
+      {/* </div> */}
     </CartProvider>
   );
 }

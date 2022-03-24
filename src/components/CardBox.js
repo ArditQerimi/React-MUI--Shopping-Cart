@@ -5,10 +5,10 @@ import { CartContext } from "../context/Context";
 import Box from "@mui/material/Box";
 
 function CardBox() {
-  const { cartItems } = useContext(CartContext);
-  const { resData, loading, error } = useContext(CartContext);
+  //   const { cartItems } = useContext(CartContext);
+  const { resData } = useContext(CartContext);
   //   console.log(cartItems);
-  console.log(resData);
+  //   console.log(resData);
   return (
     <>
       <Box

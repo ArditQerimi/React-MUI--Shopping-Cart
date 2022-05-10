@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Navigation from "./components/Navigation";
 import PropTypes from "prop-types";
 import Box from "@mui/material/Box";
-import { CartProvider } from "./context/Context";
+import axios from "axios";
 import CardBox from "./components/CardBox";
 
 import ShoppingCart from "./components/ShoppingCart";
@@ -41,24 +41,130 @@ Item.propTypes = {
   ]),
 };
 
-// const StyledFab = styled(Fab)({
-//   // position: "absolute",
-//   // zIndex: 1,
-//   // top: -30,
-//   // left: 0,
-//   // right: 0,
-//   // margin: "0 auto",
-// });
-
 function App() {
+  const [cartItems, setCartItems] = useState([]);
+
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [badge, setBadge] = useState(cartItems.length);
+  const [data, setData] = useState([]);
+  const [searchInput, setSearchInput] = useState("");
+  const [filteredData, setfilteredData] = useState(data);
+
+  useEffect(() => {
+    const newFilteredData = data.filter((data) => {
+      return data.title.toLowerCase().includes(searchInput);
+    });
+    setfilteredData(newFilteredData);
+    console.log(newFilteredData);
+  }, [data, searchInput]);
+
+  const onSearchChange = (event) => {
+    const word = event.target.value.toLowerCase();
+    setSearchInput(word);
+  };
+
+  const showHideCart = () => {
+    setIsCartOpen(!isCartOpen);
+  };
+
+  const addInCart = (product) => {
+    console.log([...cartItems]);
+    console.log([{ ...product }]);
+
+    // Gjendet nese produkti eshte ne karte
+    let isInCart = cartItems.find((item) => item.id === product.id);
+
+    // Pastaj, nese produkti eshte ne karte, atehere mbi keto produkte {...isInCart}
+    // shtohet sasia + 1 e produktit isInCart.quantity
+    // perndryshe shtohet i gjithe produkti
+
+    if (isInCart) {
+      setCartItems(
+        cartItems.map((item) =>
+          item.id === product.id
+            ? { ...isInCart, quantity: isInCart.quantity + 1 }
+            : item
+        )
+      );
+    } else {
+      // Nese produkti nuk eshte ne karte,
+      // ne produktet paraprake ose ne karte te zbrazet  [...cartItems],
+      // vendos produktet e reja {...product}
+      // plus kuantitetin 1.
+      setCartItems([...cartItems, { ...product, quantity: 1 }]);
+    }
+    setBadge(badge + 1);
+  };
+
+  const removeFromCart = (product) => {
+    let isInCart = cartItems.find((item) => item.id === product.id);
+
+    if (isInCart.quantity === 1) {
+      setCartItems(cartItems.filter((item) => item.id !== product.id));
+    } else {
+      setCartItems(
+        cartItems.map((item) =>
+          item.id === product.id
+            ? { ...isInCart, quantity: isInCart.quantity - 1 }
+            : item
+        )
+      );
+    }
+    setBadge(badge - 1);
+  };
+
+  const removeProductFromCart = (product) => {
+    setCartItems(cartItems.filter((item) => item.id !== product.id));
+    setBadge(cartItems.length - 1);
+  };
+
+  const clearAll = (product) => {
+    setCartItems([]);
+    setBadge(0);
+
+    setTimeout(() => {
+      showHideCart();
+    }, 3000);
+  };
+
+  useEffect(() => {
+    axios
+      .get("https://fakestoreapi.com/products/")
+      .then((response) => {
+        // console.log(response.data);
+        setData(response.data);
+      })
+      .catch((e) => console.log(e));
+  }, []);
+
   return (
-    <CartProvider>
-      <Navigation />
-      {/* <div> */}
-      <ShoppingCart />
-      <CardBox />
-      {/* </div> */}
-    </CartProvider>
+    <>
+      <Navigation
+        showHideCart={showHideCart}
+        addInCart={addInCart}
+        removeFromCart={removeFromCart}
+        badge={badge}
+        setBadge={setBadge}
+        onChangeHandler={onSearchChange}
+        searchInput={searchInput}
+      />
+
+      {isCartOpen && (
+        <ShoppingCart
+          addInCart={addInCart}
+          cartItems={cartItems}
+          removeFromCart={removeFromCart}
+          removeProductFromCart={removeProductFromCart}
+          clearAll={clearAll}
+        />
+      )}
+      <CardBox
+        data={data}
+        addInCart={addInCart}
+        setData={setData}
+        filteredData={filteredData}
+      />
+    </>
   );
 }
 

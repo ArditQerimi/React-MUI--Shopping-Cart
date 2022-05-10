@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -17,9 +18,6 @@ import SearchIcon from "@mui/icons-material/Search";
 
 import MoreIcon from "@mui/icons-material/MoreVert";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-
-import { useContext } from "react";
-import { CartContext } from "../context/Context";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -61,11 +59,12 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function Navigation() {
-  const { cartItems, showHideCart, showCart } = useContext(CartContext);
-
-  // console.log(showHideCart);
-
+export default function Navigation({
+  showHideCart,
+  badge,
+  searchInput,
+  onChangeHandler,
+}) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
@@ -126,7 +125,7 @@ export default function Navigation() {
     >
       <MenuItem>
         <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="error">
+          <Badge badgeContent={badge} color="error">
             <ShoppingCartIcon onClick={showHideCart} />
           </Badge>
         </IconButton>
@@ -140,22 +139,13 @@ export default function Navigation() {
       <Box sx={{ flexGrow: 1 }}>
         <AppBar position="static">
           <Toolbar>
-            <IconButton
-              size="large"
-              edge="start"
-              color="inherit"
-              aria-label="open drawer"
-              sx={{ mr: 2 }}
-            >
-              <MenuIcon />
-            </IconButton>
             <Typography
               variant="h6"
               noWrap
               component="div"
               sx={{ display: { xs: "none", sm: "block" } }}
             >
-              ShoppingCart
+              Shopping Cart
             </Typography>
             <Search>
               <SearchIconWrapper>
@@ -164,6 +154,8 @@ export default function Navigation() {
               <StyledInputBase
                 placeholder="Search…"
                 inputProps={{ "aria-label": "search" }}
+                value={searchInput}
+                onChange={onChangeHandler}
               />
             </Search>
             <Box sx={{ flexGrow: 1 }} />
@@ -173,7 +165,7 @@ export default function Navigation() {
                 aria-label="show 4 products in cart"
                 color="inherit"
               >
-                <Badge badgeContent={4} color="error">
+                <Badge badgeContent={badge} color="error">
                   <ShoppingCartIcon onClick={showHideCart} />
                 </Badge>
               </IconButton>

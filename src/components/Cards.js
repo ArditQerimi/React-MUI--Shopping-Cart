@@ -7,18 +7,9 @@ import { Button, CardActionArea, CardActions } from "@mui/material";
 import Box from "@mui/material/Box";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 
-import { useContext } from "react";
-import { CartContext } from "../context/Context";
-
-function Cards(data) {
-  //   console.log(data);
-  const { loading, error, addToCart } = useContext(CartContext);
-
+function Cards({ data, addToCart, addInCart, filter }) {
   return (
     <Box>
-      <b>{loading ? "loading" : null}</b>
-      <b>{error ? error : null}</b>
-
       <Card
         sx={{
           width: 250,
@@ -35,18 +26,24 @@ function Cards(data) {
           <CardMedia
             component="img"
             height="200px"
-            image={data.data.image}
+            image={data.image}
             alt="green iguana"
             style={{ objectFit: "contain" }}
           />
           <CardContent>
             <Typography gutterBottom variant="h7" component="div">
-              <b> {data.data.title}</b>
+              <b>
+                {data.title}
+                Title
+              </b>
             </Typography>
             <Typography variant="body5" color="text.secondary">
-              {/* {data.data.description} */}
+              {/* {data.description} */}
             </Typography>
-            <Typography>Price: {data.data.price}$</Typography>
+            <Typography>
+              Price:
+              {data.price}$
+            </Typography>
           </CardContent>
         </CardActionArea>
         <CardActions
@@ -64,7 +61,7 @@ function Cards(data) {
             sx={{ mt: "auto" }}
             variant="contained"
             startIcon={<AddShoppingCartIcon />}
-            onClick={() => addToCart(data)}
+            onClick={() => addInCart(data)}
           >
             Add To Cart
           </Button>

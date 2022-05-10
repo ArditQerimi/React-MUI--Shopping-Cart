@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Paper from "@mui/material/Paper";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import ListItemText from "@mui/material/ListItemText";
@@ -9,46 +9,32 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
+import Box from "@mui/material/Box";
 
 import BackspaceIcon from "@mui/icons-material/Backspace";
 
-import { useContext } from "react";
-import { CartContext } from "../context/Context";
-
-function ShoppingCart() {
-  const {
-    cartItems,
-    changeQuantity,
-    removeFromCart,
-    showHideCart,
-    showCart,
-  } = useContext(CartContext);
-
-  console.log(showCart);
+function ShoppingCart({
+  cartItems,
+  addInCart,
+  removeFromCart,
+  removeProductFromCart,
+  clearAll,
+}) {
+  const totalPrice = cartItems.reduce(
+    (acc, cur) => acc + cur.quantity * cur.price,
+    0
+  );
 
   return (
     <>
-      {showCart && (
-        // <div className="cart__wrapper">
-        //   <div style={{ textAlign: "right" }}>
-        //     <i
-        //       style={{ cursor: "pointer" }}
-        //       className="fa fa-times-circle"
-        //       aria-hidden="true"
-        //       onClick={showHideCart}
-        //     ></i>
-        //   </div>
+      {
         <TableContainer align="right">
           <Table
-            // theme={customTheme}
             sx={{ width: 500 }}
-            // align="right"
             aria-label="spanning table"
             component={Paper}
-            // position="absolute"
           >
             <TableHead>
               <TableRow>
@@ -69,41 +55,59 @@ function ShoppingCart() {
             </TableHead>
             <TableBody>
               {cartItems.map((item) => (
-                <TableRow key={item.data.id}>
-                  {console.log(item.data.id)}
+                <TableRow
+                  key={item.id}
+                  style={{
+                    alignItems: "center",
+                  }}
+                >
                   <TableCell button>
                     <ListItemAvatar>
                       <img
-                        src={item.data.image}
-                        alt="Profile Picture"
-                        // component="img"
-                        width="50px"
-                        // image={data.data.image}
-                        // alt="green iguana"
-                        style={{ objectFit: "contain" }}
+                        src={item.image}
+                        width="70px"
+                        height="70px"
+                        image={item.image}
+                        style={{ objectFit: "contain", borderRadius: 35 }}
                       />
-                      {/* <Avatar src={item.data.image} /> */}
                     </ListItemAvatar>
                     <ListItemText />
                   </TableCell>
-                  <TableCell>{item.data.title}</TableCell>
+                  <TableCell>
+                    {/* Title */}
+                    {item.title}
+                  </TableCell>
                   <TableCell align="center">
-                    <TextField
-                      sx={{ width: 100 }}
-                      id="outlined-number"
-                      type="number"
-                      value={2}
-                      //   {console.log(item.data.qty)}
-                      onChange={changeQuantity}
-                    />
+                    <Button
+                      size="25px"
+                      variant="contained"
+                      color="error"
+                      onClick={() => addInCart(item)}
+                    >
+                      +
+                    </Button>
+                    <Box>{item.quantity}</Box>
+
+                    <Button
+                      variant="contained"
+                      color="error"
+                      onClick={() => removeFromCart(item)}
+                    >
+                      -
+                    </Button>
                   </TableCell>
                   <TableCell align="center">$</TableCell>
-                  <TableCell align="center">{item.data.price}</TableCell>
                   <TableCell align="center">
-                    <Button variant="outlined" color="error">
-                      <DeleteIcon
-                        onClick={() => removeFromCart(item.data.id)}
-                      />
+                    {/* Price */}
+                    {(item.price * item.quantity).toFixed(2)}
+                  </TableCell>
+                  <TableCell align="center">
+                    <Button
+                      variant="outlined"
+                      color="error"
+                      onClick={() => removeProductFromCart(item)}
+                    >
+                      <DeleteIcon />
                     </Button>
                   </TableCell>
                 </TableRow>
@@ -112,12 +116,7 @@ function ShoppingCart() {
                 <TableCell colSpan={4} align="center">
                   Total
                 </TableCell>
-                <TableCell align="center">
-                  {cartItems.reduce(
-                    (amount, item) => item.data.price + amount,
-                    0
-                  )}
-                </TableCell>
+                <TableCell align="center">{totalPrice.toFixed(2)}</TableCell>
                 <TableCell align="center"></TableCell>
               </TableRow>
               <TableRow>
@@ -126,7 +125,7 @@ function ShoppingCart() {
                 </TableCell>
                 <TableCell align="center"></TableCell>
                 <TableCell align="center">
-                  <Button variant="outlined">
+                  <Button variant="outlined" onClick={() => clearAll()}>
                     <BackspaceIcon />
                   </Button>
                 </TableCell>
@@ -134,8 +133,7 @@ function ShoppingCart() {
             </TableBody>
           </Table>
         </TableContainer>
-        // </div>
-      )}
+      }
     </>
   );
 }

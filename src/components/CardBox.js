@@ -1,36 +1,26 @@
 import React from "react";
 import Cards from "./Cards";
-import { useContext } from "react";
-import { CartContext } from "../context/Context";
+
 import Box from "@mui/material/Box";
 
-function CardBox() {
-  //   const { cartItems } = useContext(CartContext);
-  const { resData } = useContext(CartContext);
-  //   console.log(cartItems);
-  //   console.log(resData);
+function CardBox({ data, addInCart, filter, filteredData }) {
   return (
     <>
       <Box
         sx={{
           display: "grid",
-          //   gap: 4,
           gridTemplateColumns: "repeat(auto-fit, 290px)",
           justifyContent: "center",
-          //   m: 1,
         }}
-        // item
-        // xs={12}
-        // sm={6}
-        // md={4}
       >
-        {/* <b>{loading ? "loading" : null}</b>
-        <b>{error ? error : null}</b> */}
-
-        {resData.length > 0
-          ? resData.map((data) => <Cards key={data.id} data={data} {...data} />)
-          : ""}
-        {/* <Cards /> */}
+        {filteredData.map((data) => (
+          <Cards
+            key={data.id}
+            data={data}
+            addInCart={addInCart}
+            filter={filter}
+          />
+        ))}
       </Box>
     </>
   );
